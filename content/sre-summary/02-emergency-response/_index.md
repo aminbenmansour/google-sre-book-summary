@@ -4,7 +4,7 @@ weight: 20
 bookCollapseSection: true
 ---
 
-# Pillar 2: Emergency Response & Live Operations
+# Pillar 2: Emergency Response & Incident Management
 Production systems will inevitably fail. In a complex distributed architecture, components degrade, networks experience transient interruptions, and bad configurations slip past validation gates. 
 
 When an outage occurs, success is determined by the speed of containment and the structural health of the operational framework, not by the heroism of individual engineers. This module provides a clear blueprint for managing live production stress cleanly and professionally.

@@ -1,0 +1,115 @@
+<div class="sre-calc-wrapper">
+    <div class="sre-calc-card">
+        <h3 class="sre-calc-title">SRE Sustainability Calculator</h3>
+        
+        <hr class="sre-calc-divider">
+        
+        <div class="sre-calc-metrics">
+            <div class="sre-calc-metric-block">
+                <span class="sre-calc-label">Op-Load %</span>
+                <span id="opLoadDisplay" class="sre-calc-value">87.5%</span>
+            </div>
+            <div class="sre-calc-metric-block">
+                <span class="sre-calc-label">Status</span>
+                <span id="statusDisplay" class="sre-calc-status status-critical">Critical (High Load)</span>
+            </div>
+        </div>
+
+        <hr class="sre-calc-divider">
+
+        <div class="sre-calc-inputs">
+            <div class="sre-calc-control-group">
+                <label class="sre-calc-input-label">Team Size</label>
+                <div class="sre-calc-stepper">
+                    <button onclick="adjustSreCalc('teamSize', -1)" type="button">−</button>
+                    <input type="number" id="teamSize" value="8" readonly>
+                    <button onclick="adjustSreCalc('teamSize', 1)" type="button">+</button>
+                </div>
+            </div>
+
+            <div class="sre-calc-control-group">
+                <label class="sre-calc-input-label">Avg Pages/Shift</label>
+                <div class="sre-calc-stepper">
+                    <button onclick="adjustSreCalc('avgPages', -1)" type="button">−</button>
+                    <input type="number" id="avgPages" value="4" readonly>
+                    <button onclick="adjustSreCalc('avgPages', 1)" type="button">+</button>
+                </div>
+            </div>
+
+            <div class="sre-calc-control-group">
+                <div class="sre-calc-slider-header">
+                    <label class="sre-calc-input-label">Hours Spent/Page</label>
+                    <span id="hoursDisplay" class="sre-calc-slider-badge">5</span>
+                </div>
+                <input type="range" id="hoursSlider" min="0" max="5" value="5" oninput="calculateSreCalc()" class="sre-calc-slider">
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .sre-calc-wrapper { display: flex; justify-content: center; margin: 2rem 0; font-family: system-ui, -apple-system, sans-serif; }
+    .sre-calc-card { width: 100%; max-width: 440px; bg-color: #1e1e1e; background: #1e1e1e; border: 1px solid #2d2d2d; border-radius: 12px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); color: #e0e0e0; text-align: left; }
+    .sre-calc-title { margin: 0 0 16px 0; font-size: 1.25rem; font-weight: 300; letter-spacing: 0.05em; text-align: center; color: #f0f0f0; }
+    .sre-calc-divider { border: 0; border-top: 1px solid #2d2d2d; margin: 16px 0; }
+    .sre-calc-metrics { display: grid; grid-template-cols: 1fr 1fr; text-align: center; gap: 16px; }
+    .sre-calc-metric-block { display: flex; flex-direction: column; }
+    .sre-calc-label { font-size: 0.75rem; text-transform: uppercase; tracking: 0.05em; color: #757575; margin-bottom: 4px; }
+    .sre-calc-value { font-size: 1.75rem; font-weight: 600; color: #ffffff; }
+    .sre-calc-status { font-size: 0.875rem; font-weight: 500; padding-top: 6px; }
+    .status-healthy { color: #4ade80; }
+    .status-warning { color: #facc15; }
+    .status-critical { color: #f87171; }
+    .sre-calc-inputs { display: flex; flex-direction: column; gap: 20px; }
+    .sre-calc-input-label { font-size: 0.875rem; color: #a3a3a3; font-weight: 500; }
+    .sre-calc-stepper { display: flex; align-items: center; background: #2d2d2d; border-radius: 8px; padding: 4px; margin-top: 8px; }
+    .sre-calc-stepper button { width: 40px; hieght: 40px; height: 40px; background: transparent; border: none; color: #a3a3a3; font-size: 1.25rem; font-weight: bold; cursor: pointer; transition: color 0.2s; }
+    .sre-calc-stepper button:hover { color: #ffffff; }
+    .sre-calc-stepper input { width: 100%; background: transparent; border: none; text-align: center; color: #ffffff; font-weight: 600; font-size: 1rem; outline: none; pointer-events: none; }
+    .sre-calc-slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .sre-calc-slider-badge { background: #2d2d2d; padding: 2px 12px; border-radius: 4px; color: #ffffff; font-weight: 600; font-size: 0.875rem; }
+    .sre-calc-slider { width: 100%; -webkit-appearance: none; appearance: none; background: #4b5563; height: 4px; border-radius: 2px; outline: none; cursor: pointer; }
+    .sre-calc-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #ffffff; cursor: pointer; }
+    .sre-calc-slider::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: #ffffff; border: none; cursor: pointer; }
+</style>
+
+<script>
+    function adjustSreCalc(id, amount) {
+        const el = document.getElementById(id);
+        let val = parseInt(el.value) + amount;
+        if (val < (id === 'teamSize' ? 1 : 0)) val = id === 'teamSize' ? 1 : 0;
+        el.value = val;
+        calculateSreCalc();
+    }
+
+    function calculateSreCalc() {
+        const teamSize = parseInt(document.getElementById('teamSize').value);
+        const avgPages = parseInt(document.getElementById('avgPages').value);
+        const hoursPerPage = parseInt(document.getElementById('hoursSlider').value);
+        
+        document.getElementById('hoursDisplay').innerText = hoursPerPage;
+
+        const shiftsPerWeek = 14;
+        const standardWorkHours = 40;
+
+        const totalOpsHours = shiftsPerWeek * avgPages * hoursPerPage;
+        const perEngineerHours = totalOpsHours / teamSize;
+        const opLoadPct = (perEngineerHours / standardWorkHours) * 100;
+
+        document.getElementById('opLoadDisplay').innerText = opLoadPct.toFixed(1) + '%';
+
+        const statusEl = document.getElementById('statusDisplay');
+        if (opLoadPct <= 50) {
+            statusEl.innerText = "Healthy (Sustainable)";
+            statusEl.className = "sre-calc-status status-healthy";
+        } else if (opLoadPct <= 70) {
+            statusEl.innerText = "Warning (High Load)";
+            statusEl.className = "sre-calc-status status-warning";
+        } else {
+            statusEl.innerText = "Critical (High Load)";
+            statusEl.className = "sre-calc-status status-critical";
+        }
+    }
+    // Run initialization once loaded
+    document.addEventListener("DOMContentLoaded", function() { calculateSreCalc(); });
+</script>
