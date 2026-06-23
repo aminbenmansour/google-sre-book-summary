@@ -3,7 +3,6 @@ theme = "hugo-book"
 [params]
 BookTheme = "auto"
 BookToC = true
-BookSection = 'sre-summary'
 
 # Show previous/next navigation links
 BookNextPrev = true
