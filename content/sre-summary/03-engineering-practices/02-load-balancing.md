@@ -11,10 +11,6 @@ This chapter details how traffic is routed from a user’s browser across the gl
 
 ---
 
-{{< toc >}}
-
----
-
 ## The Two-Tier Load Balancing Architecture
 
 SREs divide traffic management into two core layers: external (Frontend) load balancing and internal (Datacenter) load balancing.

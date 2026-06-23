@@ -1,22 +1,23 @@
-theme: hugo-book
+theme = "hugo-book"
 
-params:
-  BookTheme: auto
-  BookToC: true
+[params]
+BookTheme = "auto"
+BookToC = true
+BookSection = 'sre-summary'
 
-  # Show previous/next navigation links
-  BookNextPrev: true
+# Show previous/next navigation links
+BookNextPrev = true
 
-  BookSearch: true
-  BookMenuBundle: /menu
+BookSearch = true
+BookMenuBundle = "/menu"
 
-  BookRepo: "https://github.com/aminbenmansour/google-sre-book-summary"
+BookRepo = "https://github.com/aminbenmansour/google-sre-book-summary"
 
-  # Edit page links
-  BookEditPath: edit/main
+# Edit page links
+BookEditPath = "edit/main"
 
-  # Show last modified date
-  BookDateFormat: "January 2, 2006"
+# Show last modified date
+BookDateFormat = "January 2, 2006"
 
-  # Enable portable links between pages
-  BookPortableLinks: true
+# Enable portable links between pages
+BookPortableLinks = true
