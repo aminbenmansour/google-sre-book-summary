@@ -11,11 +11,6 @@ For SREs, engineering against cascading failures is a prerequisite for running l
 
 ---
 
-{{< toc >}}
-
----
-
-
 ## The Anatomy of a Cascading Failure
 
 A cascading failure is almost always driven by resource exhaustion or negative feedback loops. The typical lifecycle follows a predictable, destructive pattern:
